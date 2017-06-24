@@ -1,13 +1,20 @@
+import pandas
 
 
 class Simulation(object):
-    def __init__(self):
+    def __init__(self, db, events):
         # Input parameters
-        self.sim.db = static_inputs
-        self.sim.input = dynamic_inputs
+        self.db = db
+        self.events = events
 
         # Simulation parameters
         self.env = simply.Env()
+        self.bodies = []
+
+        # Ouputs
+        # {'level', 'datetime', 'object_type',
+        # 'object_id', 'object', 'message'}
+        self.log = []
 
     def initialize(self):
         pass
