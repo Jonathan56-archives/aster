@@ -4,9 +4,10 @@ import colony as col
 import timeline as t
 
 class Simulation(object):
-    def __init__(self, db, timeline):
+    def __init__(self, db, initial, timeline):
         # Input parameters
         self.db = db
+        self.initial = initial
         self.input_timeline = timeline
 
         # Simulation parameters
@@ -33,8 +34,8 @@ class Simulation(object):
         # Create earth
         self.earth = col.Earth(self)
 
-        # Change parameters with time
-        self.timeline = t.TimeLine(self)
+        # # Change parameters with time
+        # self.timeline = t.TimeLine(self)
 
         # Launch the simulation
         self.env.run(until=(self.end - self.start).total_seconds())
