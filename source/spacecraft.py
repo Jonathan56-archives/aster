@@ -65,7 +65,7 @@ class Heartofgold(Spacecraft):
         yield self.sim.env.process(self.refuel_in_orbit())
 
         # Head to Mars
-        yield self.sim.env.timeout(2 * 365 * 24 * 60 * 60)
+        yield self.sim.env.timeout(6 * 30 * 24 * 60 * 60)
 
     def refuel_in_orbit(self):
         # Remove 5 tanks from LEO

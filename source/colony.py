@@ -61,7 +61,7 @@ class Earth(Colony):
         self.heartofgold_factory = f.Heartofgold(self)
 
         # Launches
-        self.launchpad = l.EarthLaunchPad(self, 'earth_launchpad')
+        self.launchpad = l.EarthLaunchPad(self)
 
     def set_initial(self, structure, parameter):
         """Get initial value for structures"""
