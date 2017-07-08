@@ -1,3 +1,4 @@
+from __future__ import division
 import pandas as pd
 import datetime as dt
 import colony as col
