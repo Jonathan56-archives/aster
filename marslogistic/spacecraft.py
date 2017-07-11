@@ -12,7 +12,7 @@ class Spacecraft(object):
 
 class Booster(Spacecraft):
     def __init__(self, simulation):
-        super(Spacecraft, self).__init__(simulation, 'booster')
+        super(Booster, self).__init__(simulation, 'booster')
 
     def launch(self, launched):
         # Launch
@@ -37,11 +37,11 @@ class Booster(Spacecraft):
 
 class Tank(Spacecraft):
     def __init__(self, simulation):
-        super(Spacecraft, self).__init__(simulation, 'tank')
+        super(Tank, self).__init__(simulation, 'tank')
 
     def separate_from_booster(self):
         # Add some tank on LEO
-        yield self.simulation.eart.tank_storage_in_LEO.put(self)
+        yield self.sim.earth.tank_storage_in_LEO.put(self)
 
     def come_back_to_earth(self):
         # Come back down
@@ -55,7 +55,7 @@ class Tank(Spacecraft):
 
 class Heartofgold(Spacecraft):
     def __init__(self, simulation):
-        super(Spacecraft, self).__init__(simulation, 'heartofgold')
+        super(Heartofgold, self).__init__(simulation, 'heartofgold')
 
         # Parameters
         self.number_of_refuel = 5

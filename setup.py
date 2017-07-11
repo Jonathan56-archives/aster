@@ -10,7 +10,7 @@ config = {
     'description': 'Mars Logistic',
     'author': 'Jonathan Coignard',
     'author_email': 'jcoignard@lbl.gov',
-    'version': '0.0',
+    'version': '0.0.0',
     'install_requires': required,
     'packages': ['marslogistic'],
     'name': 'marslogistic',

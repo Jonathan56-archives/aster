@@ -1,5 +1,4 @@
 import factory as f
-import storage as s
 import launchpad as l
 import spacecraft as sc
 import simpy
@@ -26,24 +25,24 @@ class Colony(object):
 class Earth(Colony):
     def __init__(self, simulation):
         """Create Earth | Add ressources and processes within env"""
-        super(Colony, self).__init__(simulation, 'earth')
+        super(Earth, self).__init__(simulation, 'earth')
 
         # Containers
         # Ground level propellant reserves
         self.propelant_container = simpy.Container(
-            self.sim.env, init=self.set_initial('propelant_container', 'stock'))
+            self.sim.env, init=self.set_initial('propellant_container', 'stock'))
 
         # Storages
         # Ground level spacecraft storages
         self.booster_storage = simpy.Store(self.sim.env)
         self.booster_storage.items = (
-            [sc.Booster() for i in range(0, self.set_initial('booster_storage', 'stock'))])
+            [sc.Booster(self.sim) for i in range(0, self.set_initial('booster_storage', 'stock'))])
         self.tank_storage = simpy.Store(self.sim.env)
         self.tank_storage.items = (
-            [sc.Tank() for i in range(0, self.set_initial('tank_storage', 'stock'))])
+            [sc.Tank(self.sim) for i in range(0, self.set_initial('tank_storage', 'stock'))])
         self.heartofgold_storage = simpy.Store(self.sim.env)
         self.heartofgold_storage.items = (
-            [sc.Heartofgold() for i in range(0, self.set_initial('heartofgold_storage', 'stock'))])
+            [sc.Heartofgold(self.sim) for i in range(0, self.set_initial('heartofgold_storage', 'stock'))])
 
         # LEO tank storage
         self.tank_storage_in_LEO = simpy.Store(self.sim.env)
@@ -65,7 +64,10 @@ class Earth(Colony):
 
     def set_initial(self, structure, parameter):
         """Get initial value for structures"""
-        mask = ((self.sim.initial.colony == 'earth' &)
-                (self.sim.intial.structure == structure &)
-                (self.sim.intial.structure == parameter &))
+        mask = ((self.sim.initial.colony == 'earth') &
+                (self.sim.initial.structure == structure) &
+                (self.sim.initial.parameter == parameter))
+
+        # Check that only one value is selected with the mask
+        assert len(self.sim.initial[mask].value) == 1
         return self.sim.initial[mask].value.iloc[0]

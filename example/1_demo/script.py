@@ -1,12 +1,12 @@
 from __future__ import division
 import pandas
-import marslogistic
+import marslogistic.simulation as m
 
 # Read timeline
 timeline = pandas.read_excel('timeline.xlsx', sheetname=None)
 
 # Create simulation
-simulation = marslogistic.Simulation(
+simulation = m.Simulation(
     'db', timeline['initialization'], 'timeline')
 
 # Start simulation

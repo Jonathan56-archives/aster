@@ -11,8 +11,8 @@ class Factory(object):
 
 
 class Propellant(Factory):
-    def __inti__(self, colony):
-        super(Factory, self).__init__(colony, 'propelant_factory')
+    def __init__(self, colony):
+        super(Propellant, self).__init__(colony, 'propellant_factory')
 
         # Start factory
         self.sim.env.process(self.start())
@@ -24,8 +24,8 @@ class Propellant(Factory):
 
 
 class Booster(Factory):
-    def __inti__(self, colony):
-        super(Factory, self).__init__(colony, 'booster_factory')
+    def __init__(self, colony):
+        super(Booster, self).__init__(colony, 'booster_factory')
 
         # Start factory
         self.sim.env.process(self.start())
@@ -37,8 +37,8 @@ class Booster(Factory):
 
 
 class Tank(Factory):
-    def __inti__(self, colony):
-        super(Factory, self).__init__(colony, 'tank_factory')
+    def __init__(self, colony):
+        super(Tank, self).__init__(colony, 'tank_factory')
 
         # Start factory
         self.sim.env.process(self.start())
@@ -50,8 +50,8 @@ class Tank(Factory):
 
 
 class Heartofgold(Factory):
-    def __inti__(self, colony):
-        super(Factory, self).__init__(colony, 'heartofgold_factory')
+    def __init__(self, colony):
+        super(Heartofgold, self).__init__(colony, 'heartofgold_factory')
 
         # Start factory
         self.sim.env.process(self.start())

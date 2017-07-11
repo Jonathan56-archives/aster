@@ -3,6 +3,7 @@ import pandas as pd
 import datetime as dt
 import colony as col
 import timeline as t
+import simpy
 
 class Simulation(object):
     def __init__(self, db, initial, timeline):
@@ -12,7 +13,7 @@ class Simulation(object):
         self.input_timeline = timeline
 
         # Simulation parameters
-        self.env = simply.Env()
+        self.env = simpy.Environment()
         self.start = dt.datetime(2020, 1, 1, 0, 0, 0)
         self.end = dt.datetime(2030, 1, 1, 0, 0, 0)
         self.earth = None
