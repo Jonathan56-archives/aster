@@ -1,3 +1,4 @@
+import spacecraft as sc
 
 
 class Factory(object):
@@ -33,7 +34,8 @@ class Booster(Factory):
     def start(self):
         while True:
             yield self.sim.env.timeout(self.rate)
-            yield self.colony.booster_storage.put(self.rate)
+            for index in range(0, self.production):
+                yield self.colony.booster_storage.put(sc.Booster(self.sim))
 
 
 class Tank(Factory):
@@ -46,7 +48,8 @@ class Tank(Factory):
     def start(self):
         while True:
             yield self.sim.env.timeout(self.rate)
-            yield self.colony.tank_storage.put(self.rate)
+            for index in range(0, self.production):
+                yield self.colony.tank_storage.put(sc.Tank(self.sim))
 
 
 class Heartofgold(Factory):
@@ -59,4 +62,5 @@ class Heartofgold(Factory):
     def start(self):
         while True:
             yield self.sim.env.timeout(self.rate)
-            yield self.colony.heartofgold_storage.put(self.rate)
+            for index in range(0, self.production):
+                yield self.colony.heartofgold_storage.put(sc.Heartofgold(self.sim))

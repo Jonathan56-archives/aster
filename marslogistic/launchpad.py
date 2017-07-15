@@ -6,6 +6,8 @@ class LaunchPad(object):
         self.colony = colony
         self.name = name
 
+    def __str__(self):
+        return "Launchpad"
 
 class EarthLaunchPad(LaunchPad):
     def __init__(self, colony):
@@ -17,18 +19,19 @@ class EarthLaunchPad(LaunchPad):
     def start(self):
         while True:
             # Wait for 2 years
-            self.sim.env.timeout(int(2.1 * 365 * 24 * 60 * 60))
+            yield self.sim.env.timeout(int(2.1 * 365 * 24 * 60 * 60))
             window_start = self.sim.env.now
             window_end = window_start + 30 * 24 * 60 * 60
+            self.sim.logger.log(self, 'Launching window opened')
 
             while self.sim.env.now < window_end:
                 # Get 5 tanks and booster
                 for index in range(0, 5):
                     booster = yield self.colony.booster_storage.get()
                     tank = yield self.colony.tank_storage.get()
-                    yield self.sim.env.process(booster.launch(tank))
+                    self.sim.env.process(booster.launch(tank))
 
                 # Get the heartofgold on its way
                 booster = yield self.colony.booster_storage.get()
                 heartofgold = yield self.colony.heartofgold_storage.get()
-                yield self.sim.env.process(booster.launch(heartofgold))
+                self.sim.env.process(booster.launch(heartofgold))

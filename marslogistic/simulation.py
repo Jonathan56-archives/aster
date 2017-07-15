@@ -3,30 +3,35 @@ import pandas as pd
 import datetime as dt
 import colony as col
 import timeline as t
+import monitoring as m
 import simpy
 
 class Simulation(object):
-    def __init__(self, db, initial, timeline):
+    def __init__(self, db, timeline):
         # Input parameters
         self.db = db
-        self.initial = initial
-        self.input_timeline = timeline
+        self.timeline = timeline
+        self.initial = None
 
         # Simulation parameters
         self.env = simpy.Environment()
         self.start = dt.datetime(2020, 1, 1, 0, 0, 0)
         self.end = dt.datetime(2030, 1, 1, 0, 0, 0)
         self.earth = None
-        self.timeline = None
+        self.mars = None
 
         # Ouputs
-        # {'level', 'datetime', 'object_type',
-        # 'object_id', 'object', 'message'}
+        self.logger = None
         self.log = None
+        self.monitor = None
 
     def initialize(self):
         # Set the log to an empty list
+        self.logger = m.Logger(self)
         self.log = []
+
+        # Create the initial parameters
+        self.initial = self.timeline[self.timeline.event == 'initial'].copy()
 
     def run(self):
         """Create bodies and start the simulation"""
@@ -35,12 +40,19 @@ class Simulation(object):
 
         # Create earth
         self.earth = col.Earth(self)
+        self.mars = col.Mars(self)
 
         # # Change parameters with time
-        # self.timeline = t.TimeLine(self)
+        # self.tline = t.TimeLine(self)
+
+        # Monitor status
+        self.monitor = m.Monitoring(self)
 
         # Launch the simulation
         self.env.run(until=(self.end - self.start).total_seconds())
+
+        # Post processes
+        self.post_run()
 
     def post_run(self):
         """Post processes"""
@@ -48,7 +60,7 @@ class Simulation(object):
         self.log = pd.DataFrame(self.log)
 
         # Pause the simulation before it quits
-        import pudb; pudb.set_trace()
+        import pdb; pdb.set_trace()
 
     def __getitem__(self, name):
         return getattr(self, name)

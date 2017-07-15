@@ -22,11 +22,45 @@ class Colony(object):
         return hasattr(self, name)
 
 
+class Mars(Colony):
+    def __init__(self, simulation):
+        """Create Earth | Add ressources and processes within env"""
+        super(Mars, self).__init__(simulation, 'mars')
+
+        # Store for Heartofgolds
+        self.heartofgold_storage = simpy.Store(self.sim.env)
+
+    def log(self):
+        """Log colony status"""
+        # Log the number of ship on Mars
+        self.sim.logger.log(
+            self, 'Heartofgolds on Mars', key='mars_heartofgold',
+            level='DATA', value=len(self.heartofgold_storage.items))
+
+
 class Earth(Colony):
     def __init__(self, simulation):
         """Create Earth | Add ressources and processes within env"""
         super(Earth, self).__init__(simulation, 'earth')
 
+        # Set container and stores
+        self.set_container_and_store()
+
+        # Set factories
+        self.propelant_factory = f.Propellant(self)
+        self.booster_factory = f.Booster(self)
+        self.tank_factory = f.Tank(self)
+        self.heartofgold_factory = f.Heartofgold(self)
+
+        # Launches
+        self.launchpad = l.EarthLaunchPad(self)
+
+    def log(self):
+        """Log colony status"""
+        pass
+
+    def set_container_and_store(self):
+        """Set Containers and Stores"""
         # Containers
         # Ground level propellant reserves
         self.propelant_container = simpy.Container(
@@ -48,19 +82,9 @@ class Earth(Colony):
         self.tank_storage_in_LEO = simpy.Store(self.sim.env)
 
         # Old spacecraft recycling
-        self.booster_recycling = simpy.Store(self.sim.env)
-        self.tank_recycling = simpy.Store(self.sim.env)
-        self.heartofgold_recycling = simpy.Store(self.sim.env)
-
-        # Processes
-        # Factories
-        self.propelant_factory = f.Propellant(self)
-        self.booster_factory = f.Booster(self)
-        self.tank_factory = f.Tank(self)
-        self.heartofgold_factory = f.Heartofgold(self)
-
-        # Launches
-        self.launchpad = l.EarthLaunchPad(self)
+        self.booster_graveyard = simpy.Store(self.sim.env)
+        self.tank_graveyard = simpy.Store(self.sim.env)
+        self.heartofgold_graveyard = simpy.Store(self.sim.env)
 
     def set_initial(self, structure, parameter):
         """Get initial value for structures"""
