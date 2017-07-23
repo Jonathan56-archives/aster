@@ -16,6 +16,7 @@ class Spacecraft(object):
 class Booster(Spacecraft):
     def __init__(self, simulation):
         super(Booster, self).__init__(simulation, 'booster')
+        self.maximum_nb_of_launch = 1
 
     def launch(self, launched):
         # Launch
@@ -41,6 +42,7 @@ class Booster(Spacecraft):
 class Tank(Spacecraft):
     def __init__(self, simulation):
         super(Tank, self).__init__(simulation, 'tank')
+        self.maximum_nb_of_launch = 1
 
     def separate_from_booster(self):
         # Add some tank on LEO

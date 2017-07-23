@@ -57,7 +57,28 @@ class Earth(Colony):
 
     def log(self):
         """Log colony status"""
-        pass
+        # Log propellant stocks
+        self.sim.logger.log(
+            self, 'Propellant on Earth', key='earth_propellant',
+            level='DATA', value=self.propelant_container.level)
+
+        # Log Active Booster stocks
+        self.sim.logger.log(
+            self, 'Active booster on Earth', key='earth_booster',
+            level='DATA', value=len(self.booster_storage.items))
+
+        # Log Active Tank stocks
+        self.sim.logger.log(
+            self, 'Active tank on Earth', key='earth_tank',
+            level='DATA', value=len(self.tank_storage.items))
+        self.sim.logger.log(
+            self, 'Active tank on LEO', key='leo_tank',
+            level='DATA', value=len(self.tank_storage_in_LEO.items))
+
+        # Log Active Heartofgold stocks
+        self.sim.logger.log(
+            self, 'Active heartofgold on Earth', key='earth_heartofgold',
+            level='DATA', value=len(self.heartofgold_storage.items))
 
     def set_container_and_store(self):
         """Set Containers and Stores"""

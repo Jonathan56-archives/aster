@@ -42,11 +42,11 @@ class Simulation(object):
         self.earth = col.Earth(self)
         self.mars = col.Mars(self)
 
-        # # Change parameters with time
-        # self.tline = t.TimeLine(self)
-
         # Monitor status
         self.monitor = m.Monitoring(self)
+
+        # # Change parameters with time
+        self.tline = t.TimeLine(self)
 
         # Launch the simulation
         self.env.run(until=(self.end - self.start).total_seconds())
@@ -60,6 +60,7 @@ class Simulation(object):
         self.log = pd.DataFrame(self.log)
 
         # Pause the simulation before it quits
+        self.monitor.plot()
         import pdb; pdb.set_trace()
 
     def __getitem__(self, name):
