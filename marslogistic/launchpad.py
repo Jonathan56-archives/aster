@@ -26,44 +26,37 @@ class EarthLaunchPad(LaunchPad):
         try:
             while True:
                 # Event list
-                self.lineup = []
+                # Add Booster and heartofgold
+                self.lineup = [self.colony.booster_storage.get(),
+                               self.colony.heartofgold_storage.get()]
 
-                # Get the heartofgold and booster
-                self.h_booster = yield self.colony.booster_storage.get()
-                self.heartofgold = yield self.colony.heartofgold_storage.get()
+                # Prepare more boosters for the propellant tanks
+                self.lineup.extend(
+                    [self.colony.booster_storage.get() for i in range(0, 5)])
 
-                # Get 5 tanks and booster
+                # Get the tanks
+                self.lineup.extend(
+                    [self.colony.tank_storage.get() for i in range(0, 5)])
+
+                # Get the launch window request
+                self.lineup.extend(self.sim.launch_window.request())
+
+                # Wait for all the conditions to be lineup and ready
+                wait_for_spacecrafts = AllOf(self.sim.env, self.lineup)
+                yield wait_for_spacecrafts
+                spacecrafts = wait_for_spacecrafts.value
+
+                # Fire the tanks
                 for index in range(0, 5):
-                    self.t_booster = yield self.colony.booster_storage.get()
-                    self.tank = yield self.colony.tank_storage.get()
-                    self.sim.env.process(self.t_booster.launch(self.tank))
-                    self.t_booster = False
-                    self.tank =  False
-                # !!!!!!!!!!!!!!!! CREATE AN ARRAY AND THEN LAUNCH ALL
-                # !!!!!!! yield for all of them
+                    self.sim.env.process(
+                        spacecrafts[self.lineup[2 + index]].launch(
+                            spacecrafts[self.lineup[2 + 5 + index]]))
 
-                # Launch the heartofgold
-                self.sim.env.process(self.h_booster.launch(self.heartofgold))
-                self.h_booster = False
-                self.heartofgold = False
-
+                # Fire the heartofgold
+                self.sim.env.process(spacecrafts[self.lineup[0]].launch(
+                    spacecrafts[self.lineup[1]]))
         except:
             # Window just closed stop the launches
-            # Put back vehicle ready for launches back in store
-            if self.h_booster:
-                yield self.colony.booster_storage.put(self.h_booster)
-
-            if self.heartofgold:
-                yield self.colony.heartofgold_storage.put(self.heartofgold)
-
-            if self.t_booster:
-                yield self.colony.booster_storage.put(self.t_booster)
-
-            if self.tank:
-                yield self.colony.tank_storage.put(self.tank)
-
-    def launch_procedure(self):
-        pass
-
-    def clear_launchpad(self):
-        pass
+            wait_for_spacecrafts.callbacks = []
+            wait_for_spacecrafts.defused = True
+            wait_for_spacecrafts.fail(Exception('Mars launching window just closed'))

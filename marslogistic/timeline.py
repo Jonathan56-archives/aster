@@ -19,9 +19,13 @@ class TimeLine(object):
             # Trigger signal for launchpads
             self.earth_launch = self.sim.env.process(self.sim.earth.launchpad.start())
             yield self.earth_launch
+            self.earth_launch = None  # The process was just closed
 
     def close_window(self):
         while True:
+            # Set the window lenght
+            yield self.sim.env.timeout(30 * 24 * 60 * 60)
+
             # Wait until window close
-            yield self.sim.env.timeout(2 * 365 * 24 * 60 * 60 + 30 * 24 * 60 * 60)
+            yield self.sim.env.timeout(2 * 365 * 24 * 60 * 60)
             self.earth_launch.interrupt()
