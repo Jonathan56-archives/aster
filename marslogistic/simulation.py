@@ -33,9 +33,6 @@ class Simulation(object):
         # Create the initial parameters
         self.initial = self.timeline[self.timeline.event == 'initial'].copy()
 
-        # Create a ressource call launch window
-        self.launch_window = simpy.Resource(self.env, capacity=1)
-
     def run(self):
         """Create bodies and start the simulation"""
         # Reset the simulation
@@ -64,7 +61,8 @@ class Simulation(object):
 
         # Pause the simulation before it quits
         self.monitor.plot()
-        import pdb; pdb.set_trace()
+        self.log.to_csv('/Users/mygreencar/Desktop/logs.csv')
+        # import pdb; pdb.set_trace()
 
     def __getitem__(self, name):
         return getattr(self, name)

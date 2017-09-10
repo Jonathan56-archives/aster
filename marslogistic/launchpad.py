@@ -38,9 +38,6 @@ class EarthLaunchPad(LaunchPad):
                 self.lineup.extend(
                     [self.colony.tank_storage.get() for i in range(0, 5)])
 
-                # Get the launch window request
-                self.lineup.extend(self.sim.launch_window.request())
-
                 # Wait for all the conditions to be lineup and ready
                 wait_for_spacecrafts = AllOf(self.sim.env, self.lineup)
                 yield wait_for_spacecrafts
@@ -56,7 +53,9 @@ class EarthLaunchPad(LaunchPad):
                 self.sim.env.process(spacecrafts[self.lineup[0]].launch(
                     spacecrafts[self.lineup[1]]))
         except:
-            # Window just closed stop the launches
-            wait_for_spacecrafts.callbacks = []
-            wait_for_spacecrafts.defused = True
-            wait_for_spacecrafts.fail(Exception('Mars launching window just closed'))
+            # Close window and recall all spaceships to their stores
+            for req in self.lineup:
+                if req.processed: # tests if the request completed
+                    yield req.resource.put(req.value)
+                else:
+                    req.cancel()
