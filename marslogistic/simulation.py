@@ -42,9 +42,6 @@ class Simulation(object):
         self.earth = col.Earth(self)
         self.mars = col.Mars(self)
 
-        # Monitor status
-        self.monitor = m.Monitoring(self)
-
         # # Change parameters with time
         self.tline = t.TimeLine(self)
 
@@ -60,7 +57,6 @@ class Simulation(object):
         self.log = pd.DataFrame(self.log)
 
         # Pause the simulation before it quits
-        self.monitor.plot()
         self.log.to_csv('/Users/mygreencar/Desktop/logs.csv')
         # import pdb; pdb.set_trace()
 

@@ -1,5 +1,6 @@
 import datetime as dt
 import matplotlib.pyplot as plt
+from functools import wraps
 import seaborn
 
 
@@ -19,93 +20,48 @@ class Logger(object):
             'value': value})
 
 
-class Monitoring(object):
-    def __init__(self, simulation):
-        self.sim = simulation
-        self.rate = 30 * 24 * 60 * 60
-
-        # Add monitoring process
-        self.sim.env.process(self.start())
-
-    def start(self):
-        while True:
-            # Log status
-            self.sim.earth.log()
-
-            # Log status
-            self.sim.mars.log()
-
-            # Wait until next monitoring point
-            yield self.sim.env.timeout(self.rate)
-
-    def plot(self):
-        # Create a matrix of plots
-        nb_plots = 6
-        nb_columns = 3
-        nb_rows = 2
-        f, axarr = plt.subplots(nb_rows, nb_columns, figsize=(20, 8))
-
-        # Plot propellant tank
-        data = self.sim.log[self.sim.log.key == 'earth_propellant']
-        axarr[0, 0].plot(data.datetime, data.value)
-        axarr[0, 0].set_title('earth_propellant')
-
-        # Plot booster storage
-        data = self.sim.log[self.sim.log.key == 'earth_booster']
-        axarr[0, 1].plot(data.datetime, data.value)
-        axarr[0, 1].set_title('earth_booster')
-
-        # Plot heartofgold storage
-        data = self.sim.log[self.sim.log.key == 'earth_heartofgold']
-        axarr[0, 2].plot(data.datetime, data.value)
-        axarr[0, 2].set_title('earth_heartofgold')
-
-        # Plot tank storage
-        data = self.sim.log[self.sim.log.key == 'earth_tank']
-        axarr[1, 0].plot(data.datetime, data.value)
-        axarr[1, 0].set_title('earth_tank')
-
-        # Plot number of tank in orbit
-        data = self.sim.log[self.sim.log.key == 'leo_tank']
-        axarr[1, 1].plot(data.datetime, data.value)
-        axarr[1, 1].set_title('leo_tank')
-
-        # Plot number of heartofgold arrived on Mars
-        data = self.sim.log[self.sim.log.key == 'mars_heartofgold']
-        axarr[1, 2].plot(data.datetime, data.value)
-        axarr[1, 2].set_title('mars_heartofgold')
-        plt.show()
-
-    def __str__(self):
-        return "Monitor"
-
-def patch_resource(resource, pre=None, post=None):
-    """Patch *resource* so that it calls the callable *pre* before each
-    put/get/request/release operation and the callable *post* after each
-    operation.  The only argument to these functions is the resource
-    instance.
-    http://simpy.readthedocs.io/en/latest/topical_guides/monitoring.html
-    """
-    def get_wrapper(func):
-        # Generate a wrapper for put/get/request/release
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            # This is the actual wrapper
-            # Call "pre" callback
-            if pre:
-                pre(resource)
-
-            # Perform actual operation
-            ret = func(*args, **kwargs)
-
-            # Call "post" callback
-            if post:
-                post(resource)
-
-            return ret
-        return wrapper
-
-    # Replace the original operations with our wrapper
-    for name in ['put', 'get', 'request', 'release']:
-        if hasattr(resource, name):
-            setattr(resource, name, get_wrapper(getattr(resource, name)))
+# class Monitoring(object):
+#     def __init__(self, simulation):
+#         self.sim = simulation
+#         self.rate = 30 * 24 * 60 * 60
+#
+#     def plot(self):
+#         # Create a matrix of plots
+#         nb_plots = 6
+#         nb_columns = 3
+#         nb_rows = 2
+#         f, axarr = plt.subplots(nb_rows, nb_columns, figsize=(20, 8))
+#
+#         # # Plot propellant tank
+#         # data = self.sim.log[self.sim.log.key == 'earth_propellant']
+#         # axarr[0, 0].plot(data.datetime, data.value)
+#         # axarr[0, 0].set_title('earth_propellant')
+#
+#         # Plot booster storage
+#         data = self.sim.log[self.sim.log.key == 'get_booster_earth']
+#         axarr[0, 1].plot(data.datetime, data.value)
+#         axarr[0, 1].set_title('earth_booster')
+#
+#         # Plot heartofgold storage
+#         data = self.sim.log[self.sim.log.key == 'get_heartofgold_earth']
+#         axarr[0, 2].plot(data.datetime, data.value)
+#         axarr[0, 2].set_title('earth_heartofgold')
+#
+#         # Plot tank storage
+#         data = self.sim.log[self.sim.log.key == 'get_tank_earth']
+#         axarr[1, 0].plot(data.datetime, data.value)
+#         axarr[1, 0].set_title('earth_tank')
+#
+#         # # Plot number of tank in orbit
+#         # data = self.sim.log[self.sim.log.key == 'leo_tank']
+#         # axarr[1, 1].plot(data.datetime, data.value)
+#         # axarr[1, 1].set_title('leo_tank')
+#         #
+#         # # Plot number of heartofgold arrived on Mars
+#         # data = self.sim.log[self.sim.log.key == 'mars_heartofgold']
+#         # axarr[1, 2].plot(data.datetime, data.value)
+#         # axarr[1, 2].set_title('mars_heartofgold')
+#         plt.show()
+#
+#     def __str__(self):
+#         return "Monitor"

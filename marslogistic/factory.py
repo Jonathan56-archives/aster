@@ -1,3 +1,7 @@
+"""
+TODO:
+- create a log function inside of Factory
+"""
 import spacecraft as sc
 
 
