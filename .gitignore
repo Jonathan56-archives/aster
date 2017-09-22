@@ -1,2 +1,3 @@
 # Remove weird python files
 *.pyc
+marslogistic.egg-info/*

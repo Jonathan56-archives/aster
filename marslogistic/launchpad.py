@@ -58,4 +58,10 @@ class EarthLaunchPad(LaunchPad):
                 if req.processed: # tests if the request completed
                     yield req.resource.put(req.value)
                 else:
+                    # Log what's missing
+                    self.sim.logger.log(
+                        self, 'Missing ' + str(req.value) + ' before launch',
+                        key='missing_for_launch')
+
+                    # Cancel request
                     req.cancel()

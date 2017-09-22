@@ -26,7 +26,7 @@ class Colony(object):
 
 class Mars(Colony):
     def __init__(self, simulation):
-        """Create Earth | Add ressources and processes within env"""
+        """Create Mars"""
         super(Mars, self).__init__(simulation, 'mars')
 
         # Store for Heartofgolds
@@ -35,7 +35,7 @@ class Mars(Colony):
 
 class Earth(Colony):
     def __init__(self, simulation):
-        """Create Earth | Add ressources and processes within env"""
+        """Create Earth"""
         super(Earth, self).__init__(simulation, 'earth')
 
         # Containers
