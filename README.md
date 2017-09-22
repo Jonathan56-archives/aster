@@ -1,5 +1,7 @@
 # Logistic to MARS
 
-## Todo list:
-- I need a message that tells me:
-In 2024 send x heartofgold, couldn't send more because we were something short
+Todo list:
+- create code to process logs
+- use start date from timeline
+- create timeline file
+- implement timeline method to update parameters
