@@ -45,7 +45,7 @@ class Tank(Spacecraft):
 
     def separate_from_booster(self):
         # Add some tank on LEO
-        yield self.sim.earth.tank_storage_in_LEO.put(self)
+        yield self.sim.earth_LEO.tank_storage.put(self)
 
     def come_back_to_earth(self):
         # Come back down
@@ -75,7 +75,7 @@ class Heartofgold(Spacecraft):
         # Remove 5 tanks from LEO
         for index in range(0, self.number_of_refuel):
             # Get a tank
-            tank = yield self.sim.earth.tank_storage_in_LEO.get()
+            tank = yield self.sim.earth_LEO.tank_storage.get()
             yield self.sim.env.process(tank.come_back_to_earth())
 
     def come_back_to_earth(self):

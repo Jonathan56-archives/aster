@@ -11,6 +11,16 @@ class Colony(object):
         self.sim = simulation
         self.name = name
 
+    def set_initial(self, structure, parameter):
+        """Get initial value for structures"""
+        mask = ((self.sim.initial.colony == self.name) &
+                (self.sim.initial.structure == structure) &
+                (self.sim.initial.parameter == parameter))
+
+        # Check that only one value is selected with the mask
+        assert len(self.sim.initial[mask].value) == 1
+        return self.sim.initial[mask].value.iloc[0]
+
     def __getitem__(self, name):
         return getattr(self, name)
 
@@ -33,6 +43,15 @@ class Mars(Colony):
         self.heartofgold_storage = simpy.Store(self.sim.env)
 
 
+class Earth_LEO(Colony):
+    def __init__(self, simulation):
+        """Create Earth"""
+        super(Earth_LEO, self).__init__(simulation, 'earth_LEO')
+
+        # Create storage for heartofgold
+        self.tank_storage = s.Tank(self, intial_items=False)
+
+
 class Earth(Colony):
     def __init__(self, simulation):
         """Create Earth"""
@@ -49,9 +68,6 @@ class Earth(Colony):
         self.tank_storage = s.Tank(self)
         self.heartofgold_storage = s.Heartofgold(self)
 
-        # LEO tank storage
-        self.tank_storage_in_LEO = simpy.Store(self.sim.env)
-
         # Old spacecraft recycling
         self.booster_graveyard = simpy.Store(self.sim.env)
         self.tank_graveyard = simpy.Store(self.sim.env)
@@ -65,13 +81,3 @@ class Earth(Colony):
 
         # Launches
         self.launchpad = l.EarthLaunchPad(self)
-
-    def set_initial(self, structure, parameter):
-        """Get initial value for structures"""
-        mask = ((self.sim.initial.colony == 'earth') &
-                (self.sim.initial.structure == structure) &
-                (self.sim.initial.parameter == parameter))
-
-        # Check that only one value is selected with the mask
-        assert len(self.sim.initial[mask].value) == 1
-        return self.sim.initial[mask].value.iloc[0]

@@ -6,6 +6,7 @@ class Storage(simpy.resources.store.Store):
         # Reference to the simulation
         self.sim = colony.sim
         self.colony = colony
+        self.name = name
 
         # Initialize all the simpy variables
         super(Storage, self).__init__(self.sim.env, *args, **kwargs)
@@ -24,13 +25,14 @@ class Storage(simpy.resources.store.Store):
 
 
 class Booster(Storage):
-    def __init__(self, colony, *args, **kwargs):
+    def __init__(self, colony, intial_items=True, *args, **kwargs):
         super(Booster, self).__init__(colony, 'booster_storage', *args, **kwargs)
 
         # Initialize storage
-        self.items = (
-            [sc.Booster(self.sim) for i in
-            range(0, self.colony.set_initial('booster_storage', 'stock'))])
+        if intial_items:
+            self.items = (
+                [sc.Booster(self.sim) for i in
+                range(0, self.colony.set_initial('booster_storage', 'stock'))])
 
         # Log message
         self.get_message = 'Get booster from ' + self.colony.name
@@ -40,13 +42,14 @@ class Booster(Storage):
 
 
 class Tank(Storage):
-    def __init__(self, colony, *args, **kwargs):
+    def __init__(self, colony, intial_items=True, *args, **kwargs):
         super(Tank, self).__init__(colony, 'tank_storage', *args, **kwargs)
 
         # Initialize storage
-        self.items = (
-            [sc.Tank(self.sim) for i in
-            range(0, self.colony.set_initial('tank_storage', 'stock'))])
+        if intial_items:
+            self.items = (
+                [sc.Tank(self.sim) for i in
+                range(0, self.colony.set_initial('tank_storage', 'stock'))])
 
         # Log message
         self.get_message = 'Get tank from ' + self.colony.name

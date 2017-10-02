@@ -41,6 +41,7 @@ class Simulation(object):
 
         # Create earth
         self.earth = col.Earth(self)
+        self.earth_LEO = col.Earth_LEO(self)
         self.mars = col.Mars(self)
 
         # # Change parameters with time
