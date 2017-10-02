@@ -40,7 +40,7 @@ class Mars(Colony):
         super(Mars, self).__init__(simulation, 'mars')
 
         # Store for Heartofgolds
-        self.heartofgold_storage = simpy.Store(self.sim.env)
+        self.heartofgold_storage = s.Heartofgold(self, items=False)
 
 
 class Earth_LEO(Colony):
@@ -49,7 +49,7 @@ class Earth_LEO(Colony):
         super(Earth_LEO, self).__init__(simulation, 'earth_LEO')
 
         # Create storage for heartofgold
-        self.tank_storage = s.Tank(self, intial_items=False)
+        self.tank_storage = s.Tank(self, items=False)
 
 
 class Earth(Colony):
@@ -67,11 +67,9 @@ class Earth(Colony):
         self.booster_storage = s.Booster(self)
         self.tank_storage = s.Tank(self)
         self.heartofgold_storage = s.Heartofgold(self)
-
-        # Old spacecraft recycling
-        self.booster_graveyard = simpy.Store(self.sim.env)
-        self.tank_graveyard = simpy.Store(self.sim.env)
-        self.heartofgold_graveyard = simpy.Store(self.sim.env)
+        self.booster_graveyard = s.Booster(self, items=False, suffix='_graveyard')
+        self.tank_graveyard = s.Tank(self, items=False, suffix='_graveyard')
+        self.heartofgold_graveyard = s.Heartofgold(self, items=False, suffix='_graveyard')
 
         # Set factories
         self.propelant_factory = f.Propellant(self)

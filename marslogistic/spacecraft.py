@@ -24,7 +24,7 @@ class Booster(Spacecraft):
         launched.number_of_launch += 1
 
         # Separate with the launched
-        yield self.sim.env.process(launched.separate_from_booster())
+        self.sim.env.process(launched.separate_from_booster())
 
         # Come back on earth
         yield self.sim.env.process(self.come_back_to_earth())

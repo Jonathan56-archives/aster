@@ -9,7 +9,7 @@ class Factory(object):
         # Initialize factory parameters
         self.production = colony.set_initial(name, 'production')
         self.rate = colony.set_initial(name, 'rate')
-
+        self.ready = 0
 
 class Propellant(Factory):
     def __init__(self, colony):
@@ -34,8 +34,10 @@ class Booster(Factory):
     def start(self):
         while True:
             yield self.sim.env.timeout(self.rate)
-            for index in range(0, self.production):
+            self.ready += self.production
+            while self.ready >= 1:
                 yield self.colony.booster_storage.put(sc.Booster(self.sim))
+                self.ready -= 1
 
 
 class Tank(Factory):
@@ -48,9 +50,10 @@ class Tank(Factory):
     def start(self):
         while True:
             yield self.sim.env.timeout(self.rate)
-            for index in range(0, self.production):
+            self.ready += self.production
+            while self.ready >= 1:
                 yield self.colony.tank_storage.put(sc.Tank(self.sim))
-
+                self.ready -= 1
 
 class Heartofgold(Factory):
     def __init__(self, colony):
@@ -62,5 +65,7 @@ class Heartofgold(Factory):
     def start(self):
         while True:
             yield self.sim.env.timeout(self.rate)
-            for index in range(0, self.production):
+            self.ready += self.production
+            while self.ready >= 1:
                 yield self.colony.heartofgold_storage.put(sc.Heartofgold(self.sim))
+                self.ready -= 1
