@@ -14,6 +14,8 @@ class TimeLine(object):
             yield self.sim.env.timeout(2 * 365 * 24 * 60 * 60)
 
             # Trigger signal for launchpads
+            self.sim.logger.log(
+                self, 'Launch window open', key='launch_window_open')
             self.earth_launch = self.sim.env.process(self.sim.earth.launchpad.start())
 
             # Wait until window closes

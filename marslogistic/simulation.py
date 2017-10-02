@@ -5,6 +5,7 @@ import colony as col
 import timeline as t
 import monitoring as m
 import simpy
+import util
 
 class Simulation(object):
     def __init__(self, db, timeline):
@@ -57,8 +58,8 @@ class Simulation(object):
         self.log = pd.DataFrame(self.log)
 
         # Pause the simulation before it quits
-        self.log.to_csv('/Users/mygreencar/Desktop/logs.csv')
-        # import pdb; pdb.set_trace()
+        self.log.to_csv('/Users/mygreencar/Desktop/mars_demo/logs.csv')
+        util.plot_results('/Users/mygreencar/Desktop/mars_demo/', 'logs.csv')
 
     def __getitem__(self, name):
         return getattr(self, name)

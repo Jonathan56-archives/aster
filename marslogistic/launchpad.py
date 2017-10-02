@@ -60,7 +60,7 @@ class EarthLaunchPad(LaunchPad):
                 else:
                     # Log what's missing
                     self.sim.logger.log(
-                        self, 'Missing ' + str(req.value) + ' before launch',
+                        self, 'Missing ' + str(req) + ' before launch',
                         key='missing_for_launch')
 
                     # Cancel request
