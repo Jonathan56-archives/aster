@@ -11,6 +11,19 @@ class Factory(object):
         self.rate = colony.set_initial(name, 'rate')
         self.ready = 0
 
+    def __getitem__(self, name):
+        return getattr(self, name)
+
+    def __setitem__(self, name, value):
+        return setattr(self, name, value)
+
+    def __delitem__(self, name):
+        return delattr(self, name)
+
+    def __contains__(self, name):
+        return hasattr(self, name)
+
+
 class Propellant(Factory):
     def __init__(self, colony):
         super(Propellant, self).__init__(colony, 'propellant_factory')

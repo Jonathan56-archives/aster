@@ -36,7 +36,7 @@ class Booster(Storage):
         if items:
             self.items = (
                 [sc.Booster(self.sim) for i in
-                range(0, self.colony.set_initial('booster_storage', 'stock'))])
+                range(0, int(self.colony.set_initial('booster_storage', 'stock')))])
 
         # Log message
         self.get_message = 'Get booster from ' + self.colony.name + ' ' + suffix
@@ -53,7 +53,7 @@ class Tank(Storage):
         if items:
             self.items = (
                 [sc.Tank(self.sim) for i in
-                range(0, self.colony.set_initial('tank_storage', 'stock'))])
+                range(0, int(self.colony.set_initial('tank_storage', 'stock')))])
 
         # Log message
         self.get_message = 'Get tank from ' + self.colony.name + ' ' + suffix
@@ -70,7 +70,7 @@ class Heartofgold(Storage):
         if items:
             self.items = (
                 [sc.Heartofgold(self.sim) for i in
-                range(0, self.colony.set_initial('heartofgold_storage', 'stock'))])
+                range(0, int(self.colony.set_initial('heartofgold_storage', 'stock')))])
 
         # Log message
         self.get_message = 'Get heartofgold from ' + self.colony.name + ' ' + suffix

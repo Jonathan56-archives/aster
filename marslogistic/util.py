@@ -79,3 +79,7 @@ def plot_window_open(log):
     # Plot lines
     for date in dates:
         plt.axvline(date, linewidth=4, color='r', alpha=0.5)
+
+def now_to_date_in_seconds(simulation, date):
+    """Return the seconds to date from now"""
+    return (date - simulation.start).total_seconds() - simulation.env.now

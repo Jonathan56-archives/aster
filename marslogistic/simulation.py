@@ -16,8 +16,8 @@ class Simulation(object):
 
         # Simulation parameters
         self.env = simpy.Environment()
-        self.start = dt.datetime(2020, 1, 1, 0, 0, 0)
-        self.end = dt.datetime(2030, 1, 1, 0, 0, 0)
+        self.start = timeline.datetime.iloc[0]
+        self.end = timeline.datetime.iloc[-1]
         self.earth = None
         self.mars = None
 
