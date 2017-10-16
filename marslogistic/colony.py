@@ -38,9 +38,11 @@ class Mars(Colony):
     def __init__(self, simulation):
         """Create Mars"""
         super(Mars, self).__init__(simulation, 'mars')
-
         # Store for Heartofgolds
         self.heartofgold_storage = s.Heartofgold(self, items=False)
+
+        # Launches
+        self.launchpad = l.MarsLaunchPad(self)
 
 
 class Earth_LEO(Colony):

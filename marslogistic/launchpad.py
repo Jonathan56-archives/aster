@@ -14,13 +14,6 @@ class EarthLaunchPad(LaunchPad):
     def __init__(self, colony):
         super(EarthLaunchPad, self).__init__(colony, 'earth_launchpad')
 
-        # Launchpad vehicles
-        self.lineup = []
-        self.h_booster = False
-        self.heartofgold = False
-        self.t_booster = False
-        self.tank = False
-
     def start(self):
         """Start the launching procedure"""
         try:
@@ -52,6 +45,39 @@ class EarthLaunchPad(LaunchPad):
                 # Fire the heartofgold
                 self.sim.env.process(spacecrafts[self.lineup[0]].launch(
                     spacecrafts[self.lineup[1]]))
+        except:
+            # Close window and recall all spaceships to their stores
+            for req in self.lineup:
+                if req.processed: # tests if the request completed
+                    yield req.resource.put(req.value)
+                else:
+                    # Log what's missing
+                    self.sim.logger.log(
+                        self, 'Missing ' + str(req) + ' before launch',
+                        key='missing_for_launch')
+
+                    # Cancel request
+                    req.cancel()
+
+class MarsLaunchPad(LaunchPad):
+    def __init__(self, colony):
+        super(MarsLaunchPad, self).__init__(colony, 'mars_launchpad')
+
+    def start(self):
+        """Start the launching procedure"""
+        try:
+            while True:
+                # Event list
+                # Add Booster and heartofgold
+                self.lineup = [self.colony.heartofgold_storage.get()]
+
+                # Wait for all the conditions to be lineup and ready
+                wait_for_spacecrafts = AllOf(self.sim.env, self.lineup)
+                yield wait_for_spacecrafts
+                spacecrafts = wait_for_spacecrafts.value
+
+                # Fire the heartofgold
+                self.sim.env.process(spacecrafts[self.lineup[0]].come_back_to_earth())
         except:
             # Close window and recall all spaceships to their stores
             for req in self.lineup:

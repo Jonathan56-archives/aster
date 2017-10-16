@@ -20,20 +20,24 @@ def plot_results(path, log_filename, graphs_info=False):
                   {'keys': ['get_heartofgold_earth', 'put_heartofgold_earth'],
                    'title': 'Earth heartofgold'},
                   {'keys': ['get_booster_earth_graveyard', 'put_booster_earth_graveyard'],
-                   'title': 'Earth graveyard booster'},
+                   'title': '_Earth graveyard booster'},
                   {'keys': ['get_tank_earth_graveyard', 'put_tank_earth_graveyard'],
-                   'title': 'Earth graveyard tank'},
+                   'title': '_Earth graveyard tank'},
                   {'keys': ['get_heartofgold_earth_graveyard', 'put_heartofgold_earth_graveyard'],
-                   'title': 'Earth graveyard heartofgold'},
+                   'title': '_Earth graveyard heartofgold'},
                   {'keys': ['get_heartofgold_mars', 'put_heartofgold_mars'],
                    'title': 'Mars heartofgold'},
                    ]
 
+    xy = create_timeserie_for_cum(['heartofgold_arrived_on_mars'], log)
+    plot_timeserie(xy, log, 'heartofgold_arrived_on_mars',
+                   save=path + 'heartofgold_arrived_on_mars' + '.png')
+
     for graph in graphs:
-        xy = create_timeserie(graph['keys'], log)
+        xy = create_timeserie_for_storage(graph['keys'], log)
         plot_timeserie(xy, log, graph['title'], save=path + graph['title'] + '.png')
 
-def create_timeserie(keys, log, freq='1D'):
+def create_timeserie_for_storage(keys, log, freq='10D'):
     """Create a time series with keys"""
     # Filter keys
     data = log[log.key.isin(keys)]
@@ -54,6 +58,23 @@ def create_timeserie(keys, log, freq='1D'):
     else:
         xy = pandas.DataFrame(data_set)[['datetime', 'value']]
         xy = xy.set_index(['datetime'])
+        xy = xy.resample(freq).ffill()
+    return xy
+
+def create_timeserie_for_cum(keys, log, freq='10D'):
+    """Create a time series with keys"""
+    # Filter keys
+    data = log[log.key.isin(keys)]
+
+    # Recreate a dataframe and resample to 1 day
+    if len(data) == 0:
+        # Couldn't find the key words in logs
+        xy = pandas.DataFrame(columns=['datetime', 'value'])
+        print('Warning: no logs for ' + str(keys))
+    else:
+        data = data.groupby('datetime').count()
+        xy = data[['value']]
+        xy.loc[:, 'value'] = xy['value'].cumsum()
         xy = xy.resample(freq).ffill()
     return xy
 
@@ -78,8 +99,17 @@ def plot_window_open(log):
 
     # Plot lines
     for date in dates:
-        plt.axvline(date, linewidth=4, color='r', alpha=0.5)
+        plt.axvline(date, linewidth=2, color='r', alpha=0.5)
 
 def now_to_date_in_seconds(simulation, date):
     """Return the seconds to date from now"""
     return (date - simulation.start).total_seconds() - simulation.env.now
+
+def update_progressbar(simulation):
+    """Show progressbar"""
+    while True:
+        # Wait for a year
+        yield simulation.env.timeout(365 * 24 * 60 * 60)
+
+        # Update progress bar
+        simulation.progressbar.update(simulation.env.now)

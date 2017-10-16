@@ -5,7 +5,9 @@ import colony as col
 import timeline as t
 import monitoring as m
 import simpy
+import progressbar
 import util
+
 
 class Simulation(object):
     def __init__(self, db, timeline):
@@ -34,6 +36,13 @@ class Simulation(object):
         # Create the initial parameters
         self.initial = self.timeline[self.timeline.event == 'initial'].copy()
 
+        # Create progress bar
+        self.progressbar = progressbar.ProgressBar(widgets=['Simulation: ',
+                                           progressbar.Percentage(),
+                                           progressbar.Bar()],
+                                           maxval=util.now_to_date_in_seconds(
+                                            self, self.end)).start()
+
     def run(self):
         """Create bodies and start the simulation"""
         # Reset the simulation
@@ -48,7 +57,9 @@ class Simulation(object):
         self.tline = t.TimeLine(self)
 
         # Launch the simulation
+        self.env.process(util.update_progressbar(self))
         self.env.run(until=(self.end - self.start).total_seconds())
+        self.progressbar.finish()
 
         # Post processes
         self.post_run()

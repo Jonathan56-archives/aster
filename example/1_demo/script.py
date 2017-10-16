@@ -10,5 +10,4 @@ timeline = pandas.read_excel('timeline.xlsx')
 simulation = m.Simulation('db', timeline)
 
 # Start simulation
-simulation.end = dt.datetime(2028, 1, 1, 0, 0, 0)
 simulation.run()

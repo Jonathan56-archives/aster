@@ -4,6 +4,7 @@ class TimeLine(object):
     def __init__(self, simulation):
         self.sim = simulation
         self.earth_launch = None
+        self.mars_launch = None
 
         # Start process to open window
         self.sim.env.process(self.open_window())
@@ -25,11 +26,14 @@ class TimeLine(object):
             self.sim.logger.log(
                 self, 'Launch window open', key='launch_window_open')
             self.earth_launch = self.sim.env.process(self.sim.earth.launchpad.start())
+            self.mars_launch = self.sim.env.process(self.sim.mars.launchpad.start())
 
             # Wait until window closes
             yield self.sim.env.timeout(30 * 24 * 60 * 60)
             self.earth_launch.interrupt()
+            self.mars_launch.interrupt()
             self.earth_launch = None  # The process was just closed
+            self.mars_launch = None
 
     def timeline_update(self):
         # Select "update" rows

@@ -16,7 +16,6 @@ class Spacecraft(object):
 class Booster(Spacecraft):
     def __init__(self, simulation):
         super(Booster, self).__init__(simulation, 'booster')
-        self.maximum_nb_of_launch = 1
 
     def launch(self, launched):
         # Launch
@@ -41,7 +40,6 @@ class Booster(Spacecraft):
 class Tank(Spacecraft):
     def __init__(self, simulation):
         super(Tank, self).__init__(simulation, 'tank')
-        self.maximum_nb_of_launch = 1
 
     def separate_from_booster(self):
         # Add some tank on LEO
@@ -70,6 +68,10 @@ class Heartofgold(Spacecraft):
         # Head to Mars
         yield self.sim.env.timeout(6 * 30 * 24 * 60 * 60)
         yield self.sim.mars.heartofgold_storage.put(self)
+        self.sim.logger.log(
+            self, 'Heartofgold arrived on Mars',
+            key='heartofgold_arrived_on_mars',
+            value=1)
 
     def refuel_in_orbit(self):
         # Remove 5 tanks from LEO
@@ -79,4 +81,12 @@ class Heartofgold(Spacecraft):
             yield self.sim.env.process(tank.come_back_to_earth())
 
     def come_back_to_earth(self):
-        pass
+        # Head to earth
+        yield self.sim.env.timeout(6 * 30 * 24 * 60 * 60)
+
+        # Come back down
+        if self.number_of_launch < self.maximum_nb_of_launch:
+            yield self.sim.earth.heartofgold_storage.put(self)
+        else:
+            # Throw booster into the old booster pile
+            yield self.sim.earth.heartofgold_graveyard.put(self)
