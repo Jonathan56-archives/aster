@@ -1,7 +1,7 @@
 from __future__ import division
 import pandas
 import datetime as dt
-import marslogistic.simulation as m
+import aster.simulation as m
 
 # Read timeline
 timeline = pandas.read_excel('timeline.xlsx')

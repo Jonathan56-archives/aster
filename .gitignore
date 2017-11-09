@@ -1,4 +1,4 @@
 # Remove weird python files
 *.pyc
-marslogistic.egg-info/*
+aster.egg-info/*
 *.ipynb_checkpoints/
