@@ -1,4 +1,6 @@
 import util
+import pandas
+
 
 class TimeLine(object):
     def __init__(self, simulation):
@@ -48,3 +50,63 @@ class TimeLine(object):
 
             # Update parameter
             self.sim[row.colony][row.structure][row.parameter] = row.value
+
+
+class TimeLineFactory(object):
+    def __init__(self, filename, existing_timeline=False):
+        self.filename = filename
+        if not existing_timeline:
+            self.timeline = pandas.DataFrame()
+        else:
+            self.timeline = pandas.read_excel(existing_timeline)
+        self._cache = {}
+
+    def interpolate_timeserie(self, dates, values, new_freq):
+        """Interpolate a time serie from a few data points"""
+        # Create a date range
+        date_range = pandas.date_range(start=dates[0], end=dates[-1], freq=new_freq)
+        timeserie = pandas.DataFrame(index=date_range, columns=['value'])
+
+        # Set existing values
+        for date, value in zip(dates, values):
+            #TODO replace with the closest date, instead of the exact date?
+            timeserie.loc[date, 'value'] = value
+
+        # Interpolate
+        timeserie['value'] = pandas.to_numeric(timeserie['value'])
+        timeserie['value'] = timeserie['value'].interpolate(method='time')
+
+        # Format frame
+        timeserie['datetime'] = date_range
+        timeserie['index'] = range(0, len(date_range))
+        timeserie.set_index('index', inplace=True)
+        return timeserie
+
+    def add_to_timeline(self, timeserie, colony='None', event='None',
+                        structure='None', parameter='None', unit='None'):
+        """Add a timeserie to the timeline"""
+        # Create a dataframe from inputs
+        frame = timeserie.copy()
+        frame['colony'] = [colony] * len(frame)
+        frame['event'] = [event] * len(frame)
+        frame['parameter'] = [parameter] * len(frame)
+        frame['structure'] = [structure] * len(frame)
+        frame['unit'] = [unit] * len(frame)
+
+        # Concat frames
+        self._cache[colony + event +
+                    parameter + structure + unit] = frame
+
+    def save(self):
+        # Concat the timeline together
+        for key in self._cache:
+            self.timeline = pandas.concat([self.timeline, self._cache[key]], axis=0)
+
+        # Order by time the table
+        self.timeline = self.timeline.sort_values(by='datetime')
+        self.timeline.reset_index(inplace=True, drop=True)
+
+        # Save to excel
+        writer = pandas.ExcelWriter(self.filename)
+        self.timeline.to_excel(writer)
+        writer.save()

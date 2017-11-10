@@ -7,6 +7,7 @@ import monitoring as m
 import simpy
 import progressbar
 import util
+import os
 
 
 class Simulation(object):
@@ -15,6 +16,7 @@ class Simulation(object):
         self.db = db
         self.timeline = timeline
         self.initial = None
+        self.cwd = os.getcwd()
 
         # Simulation parameters
         self.env = simpy.Environment()
@@ -69,9 +71,12 @@ class Simulation(object):
         # Format the logs
         self.log = pd.DataFrame(self.log)
 
-        # Pause the simulation before it quits
-        self.log.to_csv('/Users/mygreencar/Desktop/mars_demo/logs.csv')
-        util.plot_results('/Users/mygreencar/Desktop/mars_demo/', 'logs.csv')
+        # Write logs to result folder
+        result_folder = os.path.join(self.cwd, 'results')
+        if not os.path.exists(result_folder):
+            os.makedirs(result_folder)
+        self.log.to_csv(os.path.join(result_folder, 'logs.csv'))
+        # util.plot_results(result_folder, 'logs.csv')
 
     def __getitem__(self, name):
         return getattr(self, name)

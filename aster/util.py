@@ -1,3 +1,4 @@
+import os
 import pandas
 import matplotlib.pyplot as plt
 import seaborn
@@ -7,7 +8,7 @@ seaborn.despine()
 def plot_results(path, log_filename, graphs_info=False):
     """Plot several results"""
     # Path of the logs
-    log_path = path + log_filename
+    log_path = os.path.join(path, log_filename)
 
     # Read log
     log = pandas.read_csv(log_path, index_col=0, parse_dates=[1])
@@ -31,11 +32,11 @@ def plot_results(path, log_filename, graphs_info=False):
 
     xy = create_timeserie_for_cum(['heartofgold_arrived_on_mars'], log)
     plot_timeserie(xy, log, 'heartofgold_arrived_on_mars',
-                   save=path + 'heartofgold_arrived_on_mars' + '.png')
+                   save=os.path.join(path, 'heartofgold_arrived_on_mars.png'))
 
     for graph in graphs:
         xy = create_timeserie_for_storage(graph['keys'], log)
-        plot_timeserie(xy, log, graph['title'], save=path + graph['title'] + '.png')
+        plot_timeserie(xy, log, graph['title'], save=os.path.join(path, graph['title'] + '.png'))
 
 def create_timeserie_for_storage(keys, log, freq='10D'):
     """Create a time series with keys"""

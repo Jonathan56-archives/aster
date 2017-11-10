@@ -14,7 +14,7 @@ config = {
     'install_requires': required,
     'packages': ['aster'],
     'name': 'aster',
-    'package_data': {'': ['*.csv']},  # Add the drivecycle matlab data
+    'package_data': {'': ['*.csv']},
     'include_package_data': True,
 }
 
