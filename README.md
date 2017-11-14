@@ -1,8 +1,8 @@
 # ASTER
 
 ## QuickStart
-Install Aster in your python environment:
-*Note: use pip "-e" flag for the developer mode*
+Install Aster in your python environment
+*(use pip "-e" flag for the developer mode)*:
 ``` ShellSession
 git clone https://github.com/Jonathan56/aster.git aster
 pip install .
