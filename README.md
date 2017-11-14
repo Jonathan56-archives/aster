@@ -1,23 +1,33 @@
-# MARS
+# ASTER
 
-## Get started
-Download the software
-- $ git clone https://github.com/Jonathan56/aster.git
-- $ pip install .
+## QuickStart
+Installing Aster (use pip "-e" flag for the developer mode)
+``` ShellSession
+git clone https://github.com/Jonathan56/aster.git aster
+pip install .
+```
 
-Create a project
-- $ python
-- $ import aster
-- $ aster.new('PROJECT_PATH')
-- $ exit()
+Create a project by opening a python console
+``` Python console
+import aster
+aster.new('PROJECT_PATH')
+exit()
+```
 
-Run a simulation
-- $ jupyter notebook (run all "create timeline")
-- $ python script.py
-- $ jupyter notebook (run all "plot simulation results")
+In order to run a simulation, you must first create a "timeline" describing events
+happens during the time frame of the simulation. To do so, open "create timeline",
+and run all the cells.
 
-## Todo list:
+To launch a simulation just run:
+``` ShellSession
+python script.py
+```
+
+Finally, to see the results of the simulations, you need to parse the simulation log.
+To do so, open "plot simulation results" and run all the cells.
+
+## To do list:
 - improve the plug and play approach
-- Add propellant logic
-- Save unused propellant
-- Add time constraint for launching from the same launchpad
+- add propellant logic
+- save unused propellant
+- add time constraint for launching from the same launchpad
