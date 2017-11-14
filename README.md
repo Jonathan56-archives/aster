@@ -2,11 +2,11 @@
 
 ## QuickStart
 Install Aster in your python environment:
+*Note: use pip "-e" flag for the developer mode*
 ``` ShellSession
 git clone https://github.com/Jonathan56/aster.git aster
 pip install .
 ```
-Note: use pip "-e" flag for developer mode
 
 To create a project open a Python console:
 ``` Python console
@@ -16,7 +16,7 @@ exit()
 ```
 
 In order to run a simulation, you must first create a "timeline" describing events
-happens during the time frame of the simulation. To do so, open "create timeline",
+happening during a time frame of the simulation. To do so, open "create timeline",
 and run all the cells.
 
 To launch a simulation just run:
@@ -24,7 +24,7 @@ To launch a simulation just run:
 python script.py
 ```
 
-Finally, to see the results of the simulations, you need to parse the simulation log.
+Finally, to see the results of a simulation, you need to parse the simulation log.
 To do so, open "plot simulation results" and run all the cells.
 
 ## To do list:
