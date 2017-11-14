@@ -16,7 +16,7 @@ exit()
 ```
 
 In order to run a simulation, you must first create a "timeline" describing events
-happening during a time frame of the simulation. To do so, open "create timeline",
+happening during the time frame of a simulation. To do so, open "create timeline",
 and run all the cells.
 
 To launch a simulation just run:
