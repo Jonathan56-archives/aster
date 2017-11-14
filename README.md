@@ -1,15 +1,23 @@
 # MARS
 
-Todo list:
-<!-- - plot production rates
-- create complex production profiles
-- Re-organize code (util, create timeline) -->
+## Get started
+Download the software
+$ git clone https://github.com/Jonathan56/aster.git
+$ pip install .
 
-- Create a function in timeline to add a time series to a timeline
-- Create a mini notebook to create timeline from zero
-- Create monitoring function to export time series + web page to show results?
-- Create util to initialize a project from scratch
+Create a project
+$ python
+$ import aster
+$ aster.new('PROJECT_PATH')
+$ exit()
 
+Run a simulation
+$ jupyter notebook (run all "create timeline")
+$ python script.py
+$ jupyter notebook (run all "plot simulation results")
+
+## Todo list:
+- improve the plug and play approach
 - Add propellant logic
 - Save unused propellant
 - Add time constraint for launching from the same launchpad
