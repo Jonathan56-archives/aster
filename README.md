@@ -2,19 +2,19 @@
 
 ## Get started
 Download the software
-$ git clone https://github.com/Jonathan56/aster.git
-$ pip install .
+- $ git clone https://github.com/Jonathan56/aster.git
+- $ pip install .
 
 Create a project
-$ python
-$ import aster
-$ aster.new('PROJECT_PATH')
-$ exit()
+- $ python
+- $ import aster
+- $ aster.new('PROJECT_PATH')
+- $ exit()
 
 Run a simulation
-$ jupyter notebook (run all "create timeline")
-$ python script.py
-$ jupyter notebook (run all "plot simulation results")
+- $ jupyter notebook (run all "create timeline")
+- $ python script.py
+- $ jupyter notebook (run all "plot simulation results")
 
 ## Todo list:
 - improve the plug and play approach
