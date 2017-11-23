@@ -2,14 +2,22 @@ import spacecraft as sc
 
 
 class Factory(object):
-    def __init__(self, colony, name):
+    def __init__(self, colony, name=''):
         self.sim = colony.sim
         self.colony = colony
 
         # Initialize factory parameters
         self.production = colony.set_initial(name, 'production')
-        self.rate = colony.set_initial(name, 'rate')
-        self.ready = 0
+        self.timestep = colony.set_initial(name, 'rate')
+        self.ready_unit = 0
+
+    def start(self):
+        """Factory begins to produce goods"""
+        raise NotImplementedError
+
+    def set(self, param, value):
+        """Set new production objectives"""
+        raise NotImplementedError
 
     def __getitem__(self, name):
         return getattr(self, name)
@@ -33,8 +41,8 @@ class Propellant(Factory):
 
     def start(self):
         while True:
-            yield self.sim.env.timeout(self.rate)
-            yield self.colony.propelant_container.put(self.rate)
+            yield self.sim.env.timeout(self.timestep)
+            yield self.colony.propelant_container.put(self.timestep)
 
 
 class Booster(Factory):
@@ -46,11 +54,11 @@ class Booster(Factory):
 
     def start(self):
         while True:
-            yield self.sim.env.timeout(self.rate)
-            self.ready += self.production
-            while self.ready >= 1:
+            yield self.sim.env.timeout(self.timestep)
+            self.ready_unit += self.production
+            while self.ready_unit >= 1:
                 yield self.colony.booster_storage.put(sc.Booster(self.sim))
-                self.ready -= 1
+                self.ready_unit -= 1
 
 
 class Tank(Factory):
@@ -62,11 +70,11 @@ class Tank(Factory):
 
     def start(self):
         while True:
-            yield self.sim.env.timeout(self.rate)
-            self.ready += self.production
-            while self.ready >= 1:
+            yield self.sim.env.timeout(self.timestep)
+            self.ready_unit += self.production
+            while self.ready_unit >= 1:
                 yield self.colony.tank_storage.put(sc.Tank(self.sim))
-                self.ready -= 1
+                self.ready_unit -= 1
 
 class Heartofgold(Factory):
     def __init__(self, colony):
@@ -77,8 +85,8 @@ class Heartofgold(Factory):
 
     def start(self):
         while True:
-            yield self.sim.env.timeout(self.rate)
-            self.ready += self.production
-            while self.ready >= 1:
+            yield self.sim.env.timeout(self.timestep)
+            self.ready_unit += self.production
+            while self.ready_unit >= 1:
                 yield self.colony.heartofgold_storage.put(sc.Heartofgold(self.sim))
-                self.ready -= 1
+                self.ready_unit -= 1

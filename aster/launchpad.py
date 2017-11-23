@@ -7,8 +7,13 @@ class LaunchPad(object):
         self.colony = colony
         self.name = name
 
+    def start(self):
+        """Start the launchpad firing sequence"""
+        raise NotImplementedError
+
     def __str__(self):
         return "Launchpad"
+
 
 class EarthLaunchPad(LaunchPad):
     def __init__(self, colony):
@@ -58,6 +63,7 @@ class EarthLaunchPad(LaunchPad):
 
                     # Cancel request
                     req.cancel()
+
 
 class MarsLaunchPad(LaunchPad):
     def __init__(self, colony):

@@ -45,18 +45,18 @@ class Simulation(object):
                                            maxval=util.now_to_date_in_seconds(
                                             self, self.end)).start()
 
-    def run(self):
-        """Create bodies and start the simulation"""
-        # Reset the simulation
-        self.initialize()
-
-        # Create earth
+        # Create colonies
         self.earth = col.Earth(self)
         self.earth_LEO = col.Earth_LEO(self)
         self.mars = col.Mars(self)
 
-        # # Change parameters with time
+        # Change parameters with time
         self.tline = t.TimeLine(self)
+
+    def run(self):
+        """Create bodies and start the simulation"""
+        # Reset the simulation
+        self.initialize()
 
         # Launch the simulation
         self.env.process(util.update_progressbar(self))
@@ -76,7 +76,6 @@ class Simulation(object):
         if not os.path.exists(result_folder):
             os.makedirs(result_folder)
         self.log.to_csv(os.path.join(result_folder, 'logs.csv'))
-        # util.plot_results(result_folder, 'logs.csv')
 
     def __getitem__(self, name):
         return getattr(self, name)
